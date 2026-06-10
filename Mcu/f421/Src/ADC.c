@@ -20,6 +20,20 @@ extern uint16_t ADC_raw_current;
 extern uint16_t ADC_raw_input;
 extern uint16_t ADC_raw_ntc;
 
+#ifndef CURRENT_ADC_PORT
+#define CURRENT_ADC_PORT GPIOA
+#endif
+
+#ifndef VOLTAGE_ADC_PORT
+#define VOLTAGE_ADC_PORT GPIOA
+#endif
+
+#ifdef USE_NTC
+#ifndef NTC_ADC_PORT
+#define NTC_ADC_PORT GPIOA
+#endif
+#endif
+
 void ADC_DMA_Callback()
 { // read dma buffer and set extern variables
 #ifdef USE_ADC_INPUT
@@ -46,11 +60,11 @@ void ADC_Init(void)
 #ifdef PA2_VOLTAGE
     gpio_mode_QUICK(GPIOA, GPIO_MODE_ANALOG, GPIO_PULL_NONE, GPIO_PINS_2);
 #else
-    gpio_mode_QUICK(GPIOA, GPIO_MODE_ANALOG, GPIO_PULL_NONE, CURRENT_ADC_PIN);
+    gpio_mode_QUICK(CURRENT_ADC_PORT, GPIO_MODE_ANALOG, GPIO_PULL_NONE, CURRENT_ADC_PIN);
 #endif
-    gpio_mode_QUICK(GPIOA, GPIO_MODE_ANALOG, GPIO_PULL_NONE, VOLTAGE_ADC_PIN);
+    gpio_mode_QUICK(VOLTAGE_ADC_PORT, GPIO_MODE_ANALOG, GPIO_PULL_NONE, VOLTAGE_ADC_PIN);
 #ifdef USE_NTC
-    gpio_mode_QUICK(GPIOA, GPIO_MODE_ANALOG, GPIO_PULL_NONE, NTC_ADC_PIN);
+    gpio_mode_QUICK(NTC_ADC_PORT, GPIO_MODE_ANALOG, GPIO_PULL_NONE, NTC_ADC_PIN);
 #endif 
 
 
