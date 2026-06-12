@@ -11,6 +11,14 @@
 #include "kiss_telemetry.h"
 
 #ifdef USE_PA14_TELEMETRY
+/*
+ * WARNING:
+ * PA14 telemetry uses DMA1_CHANNEL4.
+ * This must not be enabled on targets that also use USE_TIMER_3_CHANNEL_1,
+ * because those targets use DMA1_CHANNEL4 as INPUT_DMA_CHANNEL for input/DShot.
+ * Current PA14 telemetry targets are safe because they use USE_TIMER_15_CHANNEL_1
+ * and keep input DMA on DMA1_CHANNEL5.
+ */
 
 void send_telem_DMA(uint8_t bytes)
 { // set data length and enable channel to start transfer
