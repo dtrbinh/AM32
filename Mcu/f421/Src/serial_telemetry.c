@@ -52,6 +52,9 @@ void telem_UART_Init(void)
     dma_init_struct.loop_mode_enable = FALSE;
     dma_init(DMA1_CHANNEL4, &dma_init_struct);
 
+    dma_interrupt_enable(DMA1_CHANNEL4, DMA_FDT_INT, TRUE);
+    dma_interrupt_enable(DMA1_CHANNEL4, DMA_DTERR_INT, TRUE);
+
     /* configure usart2 param */
     usart_init(USART2, 115200, USART_DATA_8BITS, USART_STOP_1_BIT);
     usart_transmitter_enable(USART2, TRUE);
@@ -103,8 +106,8 @@ void telem_UART_Init(void)
     dma_init_struct.loop_mode_enable = FALSE;
     dma_init(DMA1_CHANNEL2, &dma_init_struct);
 
- //   DMA1_CHANNEL2->ctrl |= DMA_FDT_INT;
- //   DMA1_CHANNEL2->ctrl |= DMA_DTERR_INT;
+    dma_interrupt_enable(DMA1_CHANNEL2, DMA_FDT_INT, TRUE);
+    dma_interrupt_enable(DMA1_CHANNEL2, DMA_DTERR_INT, TRUE);
 
     /* configure usart1 param */
     usart_init(USART1, 115200, USART_DATA_8BITS, USART_STOP_1_BIT);
