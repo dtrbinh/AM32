@@ -129,10 +129,11 @@ void DMA1_Channel1_IRQHandler(void)
 void DMA1_Channel4_IRQHandler(void)
 {
     if (dma_flag_get(DMA1_FDT4_FLAG) == SET) {
+        send_telemetry = 0;
         DMA1->clr = DMA1_GL4_FLAG;
         DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
     }
-    if (dma_flag_get(DMA1_DTERR2_FLAG) == SET) {
+    if (dma_flag_get(DMA1_DTERR4_FLAG) == SET) {
         DMA1->clr = DMA1_GL4_FLAG;
         DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
     }
