@@ -71,18 +71,6 @@ void PendSV_Handler(void) { }
 */
 void SysTick_Handler(void) { delay_decrement(); }
 
-void DMA_Channel1_2_IRQHandler(void)
-{
-    if (dma_interrupt_flag_get(DMA_CH1, DMA_INT_FLAG_FTF)) {
-        send_telemetry = 0;
-        dma_interrupt_flag_clear(DMA_CH1, DMA_INT_FLAG_G);
-        dma_channel_disable(DMA_CH1);
-    } else if (dma_interrupt_flag_get(DMA_CH1, DMA_INT_FLAG_ERR)) {
-        dma_interrupt_flag_clear(DMA_CH1, DMA_INT_FLAG_G);
-        dma_channel_disable(DMA_CH1);
-    }
-}
-
 void DMA_Channel3_4_IRQHandler(void)
 {
     #ifdef USE_LED_STRIP

@@ -42,8 +42,7 @@ void telem_UART_Init(void)
 
     usart_dma_transmit_config(USART0, USART_DENT_ENABLE);
     /* enable DMA channel1 transfer complete interrupt */
-    dma_interrupt_enable(DMA_CH1, DMA_INT_FTF);
-    dma_interrupt_enable(DMA_CH1, DMA_INT_ERR);
+    //  dma_interrupt_enable(DMA_CH1, DMA_INT_FTF);
     /* enable DMA channel1 */
     dma_channel_enable(DMA_CH1);
     usart_halfduplex_enable(USART0);

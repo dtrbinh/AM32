@@ -69,9 +69,11 @@ void telem_UART_Init(void)
     LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_4, sizeof(aTxBuffer));
 
     /* (5) Enable DMA transfer complete/error interrupts  */
-    LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_4);
-    LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_4);
+    // LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_4);
+    // LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_4);
 
+    // NVIC_SetPriority(DMA1_Channel4_5_IRQn, 2);
+    // NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
 
 void send_telem_DMA(uint8_t bytes)
