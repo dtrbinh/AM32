@@ -87,17 +87,16 @@ void SysTick_Handler(void) { }
 /**
  * @brief This function handles DMA1 channel 2 and 3 interrupts.
  */
-void DMA1_Channel2_3_IRQHandler(void)
-{
-    if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
-        send_telemetry = 0;
-        LL_DMA_ClearFlag_GI2(DMA1);
-        LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_2);
-    } else if (LL_DMA_IsActiveFlag_TE2(DMA1)) {
-        LL_DMA_ClearFlag_GI2(DMA1);
-        LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_2);
-    }
-}
+//void DMA1_Channel2_3_IRQHandler(void)
+//{
+//    if (LL_DMA_IsActiveFlag_TC2(DMA1)) {
+//        LL_DMA_ClearFlag_GI2(DMA1);
+//        LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_2);
+//    } else if (LL_DMA_IsActiveFlag_TE2(DMA1)) {
+//        LL_DMA_ClearFlag_GI2(DMA1);
+//        LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_2);
+//    }
+//}
 
 /**
  * @brief This function handles DMA1 channel 4 and 5 interrupts.
@@ -138,7 +137,6 @@ void DMA1_Channel4_5_IRQHandler(void)
     }
 #ifdef USE_PA14_TELEMETRY
     if (LL_DMA_IsActiveFlag_TC4(DMA1)) {
-        send_telemetry = 0;
         LL_DMA_ClearFlag_GI4(DMA1);
         LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_4);
         /* Call function Transmission complete Callback */
