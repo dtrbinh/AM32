@@ -109,17 +109,18 @@ void DMA1_Channel1_IRQHandler(void)
     }
 }
 
-//void DMA1_Channel3_2_IRQHandler(void)
-//{
-//    if (dma_flag_get(DMA1_FDT2_FLAG) == SET) {
-//        DMA1->clr = DMA1_GL2_FLAG;
-//        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
-//    }
-//    if (dma_flag_get(DMA1_DTERR2_FLAG) == SET) {
-//        DMA1->clr = DMA1_GL2_FLAG;
-//        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
-//    }
-//}
+void DMA1_Channel3_2_IRQHandler(void)
+{
+    if (dma_flag_get(DMA1_FDT2_FLAG) == SET) {
+        send_telemetry = 0;
+        DMA1->clr = DMA1_GL2_FLAG;
+        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
+    }
+    if (dma_flag_get(DMA1_DTERR2_FLAG) == SET) {
+        DMA1->clr = DMA1_GL2_FLAG;
+        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
+    }
+}
 
 void DMA1_Channel5_4_IRQHandler(void)
 {
@@ -147,6 +148,17 @@ void DMA1_Channel5_4_IRQHandler(void)
     if (dma_flag_get(DMA1_DTERR5_FLAG) == SET) {
         DMA1->clr = DMA1_GL5_FLAG;
     }
+#ifdef USE_PA14_TELEMETRY
+    if (dma_flag_get(DMA1_FDT4_FLAG) == SET) {
+        send_telemetry = 0;
+        DMA1->clr = DMA1_GL4_FLAG;
+        DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
+    }
+    if (dma_flag_get(DMA1_DTERR4_FLAG) == SET) {
+        DMA1->clr = DMA1_GL4_FLAG;
+        DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
+    }
+#endif
 #endif
 #ifdef USE_TIMER_3_CHANNEL_1
     if (dshot) {

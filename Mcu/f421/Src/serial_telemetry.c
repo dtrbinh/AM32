@@ -11,6 +11,14 @@
 #include "kiss_telemetry.h"
 
 #ifdef USE_PA14_TELEMETRY
+/*
+ * WARNING:
+ * PA14 telemetry uses DMA1_CHANNEL4.
+ * This must not be enabled on targets that also use USE_TIMER_3_CHANNEL_1,
+ * because those targets use DMA1_CHANNEL4 as INPUT_DMA_CHANNEL for input/DShot.
+ * Current PA14 telemetry targets are safe because they use USE_TIMER_15_CHANNEL_1
+ * and keep input DMA on DMA1_CHANNEL5.
+ */
 
 void send_telem_DMA(uint8_t bytes)
 { // set data length and enable channel to start transfer
@@ -51,6 +59,9 @@ void telem_UART_Init(void)
     dma_init_struct.priority = DMA_PRIORITY_LOW;
     dma_init_struct.loop_mode_enable = FALSE;
     dma_init(DMA1_CHANNEL4, &dma_init_struct);
+
+    dma_interrupt_enable(DMA1_CHANNEL4, DMA_FDT_INT, TRUE);
+    dma_interrupt_enable(DMA1_CHANNEL4, DMA_DTERR_INT, TRUE);
 
     /* configure usart2 param */
     usart_init(USART2, 115200, USART_DATA_8BITS, USART_STOP_1_BIT);
@@ -103,8 +114,8 @@ void telem_UART_Init(void)
     dma_init_struct.loop_mode_enable = FALSE;
     dma_init(DMA1_CHANNEL2, &dma_init_struct);
 
- //   DMA1_CHANNEL2->ctrl |= DMA_FDT_INT;
- //   DMA1_CHANNEL2->ctrl |= DMA_DTERR_INT;
+    dma_interrupt_enable(DMA1_CHANNEL2, DMA_FDT_INT, TRUE);
+    dma_interrupt_enable(DMA1_CHANNEL2, DMA_DTERR_INT, TRUE);
 
     /* configure usart1 param */
     usart_init(USART1, 115200, USART_DATA_8BITS, USART_STOP_1_BIT);

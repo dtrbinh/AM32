@@ -73,8 +73,8 @@ void telem_UART_Init()
     LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_3, sizeof(aTxBuffer));
 
     /* (5) Enable DMA transfer complete/error interrupts  */
-  //  LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_3);
-  //  LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_3);
+        LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_3);
+        LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_3);
 }
 
 void send_telem_DMA(uint8_t bytes)

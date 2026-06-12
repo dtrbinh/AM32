@@ -134,6 +134,7 @@ void DMA1_Channel7_IRQHandler(void)
 {
     if(DMA_GetITStatus(DMA1_IT_TC7))
     {
+        send_telemetry = 0;
         USART_DMACmd(USART2,USART_DMAReq_Tx,DISABLE);
         DMA_Cmd(DMA1_Channel7, DISABLE);
         MODIFY_REG(USART2->CTLR1, 0x3<<2, 0x0<<3);  //disable send

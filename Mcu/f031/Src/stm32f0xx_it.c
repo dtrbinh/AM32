@@ -34,6 +34,7 @@ extern void transfercomplete(void);
 extern void interruptRoutine();
 extern void PeriodElapsedCallback();
 extern void tenKhzRoutine();
+extern volatile char send_telemetry;
 extern volatile char servoPwm;
 
 int update_interupt = 0;
@@ -139,6 +140,7 @@ void DMA1_Channel4_5_IRQHandler(void)
 {
 #ifdef USE_SERIAL_TELEMETRY
     if (LL_DMA_IsActiveFlag_TC4(DMA1)) {
+        send_telemetry = 0;
         LL_DMA_ClearFlag_GI4(DMA1);
         LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_4);
         /* Call function Transmission complete Callback */
