@@ -139,6 +139,8 @@ void telem_UART_Init(void)
         LL_USART_DMA_GetRegAddr(USART1, LL_USART_DMA_REG_DATA_TRANSMIT),
         LL_DMA_GetDataTransferDirection(DMA1, LL_DMA_CHANNEL_2));
     LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_2, sizeof(aTxBuffer));
+    LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_2);
+    LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_2);
     LL_USART_EnableDMAReq_TX(USART1);
 }
 
