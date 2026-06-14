@@ -210,6 +210,7 @@
 #define LOOP_FREQUENCY_HZ 20000
 #define USE_LSE
 #define USE_LSE_BYPASS 0
+#define USE_SERIAL_TELEMETRY
 #endif
 
 #ifdef TBS_16S_L431_CAN
@@ -228,6 +229,7 @@
 #define LOOP_FREQUENCY_HZ 20000
 #define USE_LSE
 #define USE_LSE_BYPASS 1
+#define USE_SERIAL_TELEMETRY
 #endif
 
 #ifdef TBS_16S_L431
@@ -243,6 +245,7 @@
 #define LOOP_FREQUENCY_HZ 20000
 #define USE_LSE
 #define USE_LSE_BYPASS 1
+#define USE_SERIAL_TELEMETRY
 #endif
 
 #ifdef  REF_L431
@@ -630,6 +633,19 @@
 #define CURRENT_ADC_PIN GPIO_PINS_3
 #define VOLTAGE_ADC_CHANNEL ADC_CHANNEL_6
 #define VOLTAGE_ADC_PIN GPIO_PINS_6
+#endif
+
+#ifdef  DEEPSPACE_TALOS_F421
+#define FIRMWARE_NAME "DEEPSPACE_F4"
+#define FILE_NAME "DEEPSPACE_TALOS_F421"
+#define DEAD_TIME 75
+#define HARDWARE_GROUP_AT_540
+#define HARDWARE_GROUP_AT_E
+#define USE_SERIAL_TELEMETRY
+#define VOLTAGE_ADC_CHANNEL ADC_CHANNEL_3
+#define VOLTAGE_ADC_PIN GPIO_PINS_3
+#define USE_LED_STRIP
+#define WS2812_PIN GPIO_PINS_4
 #endif
 
 #ifdef  FLYWOO_GOKU_F421
@@ -1061,6 +1077,15 @@
 
 /***************************************End Generic
  * *****************************************/
+
+#ifdef  FLYCOLOR_F421
+#define FIRMWARE_NAME "FLYCOLOR_F4 "
+#define FILE_NAME "FLYCOLOR_F421"
+#define DEAD_TIME 60
+#define HARDWARE_GROUP_AT_B
+#define HARDWARE_GROUP_AT_540
+#define USE_SERIAL_TELEMETRY
+#endif
 
 #ifdef  MAXKGO_F421
 #define FIRMWARE_NAME "MAXKGO_F4 "
@@ -2485,6 +2510,19 @@
 #define HARDWARE_GROUP_G0_A
 #define USE_SERIAL_TELEMETRY
 #define SIXTY_FOUR_KB_MEMORY
+#endif
+
+#ifdef  ZTW_A_HV_G071
+#define FILE_NAME "ZTW_A_HV_G071"
+#define FIRMWARE_NAME "ZTW_A_HV_G0 "
+#define DEAD_TIME 60
+#define MILLIVOLT_PER_AMP 20
+#define CURRENT_OFFSET 0
+#define HARDWARE_GROUP_G0_A
+#define USE_SERIAL_TELEMETRY
+#define SIXTY_FOUR_KB_MEMORY
+#define RAMP_SPEED_LOW_RPM 2
+#define RAMP_SPEED_HIGH_RPM 4
 #endif
 
 #ifdef  TBS_4IN1_G071
