@@ -8,6 +8,9 @@
 #include "common.h"
 #include "comparator.h"
 
+#if defined(USE_PA14_TELEMETRY) && defined(USE_TIMER_3_CHANNEL_1)
+#error "USE_PA14_TELEMETRY conflicts with USE_TIMER_3_CHANNEL_1 on F421 because both use DMA1_CHANNEL4"
+#endif
 
 extern void transfercomplete();
 extern void PeriodElapsedCallback();
@@ -109,27 +112,35 @@ void DMA1_Channel1_IRQHandler(void)
     }
 }
 
-//void DMA1_Channel3_2_IRQHandler(void)
-//{
-//    if (dma_flag_get(DMA1_FDT2_FLAG) == SET) {
-//        DMA1->clr = DMA1_GL2_FLAG;
-//        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
-//    }
-//    if (dma_flag_get(DMA1_DTERR2_FLAG) == SET) {
-//        DMA1->clr = DMA1_GL2_FLAG;
-//        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
-//    }
-//}
+void DMA1_Channel3_2_IRQHandler(void)
+{
+    if (dma_flag_get(DMA1_FDT2_FLAG) == SET) {
+        send_telemetry = 0;
+        DMA1->clr = DMA1_GL2_FLAG;
+        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
+    }
+    if (dma_flag_get(DMA1_DTERR2_FLAG) == SET) {
+        DMA1->clr = DMA1_GL2_FLAG;
+        DMA1_CHANNEL2->ctrl_bit.chen = FALSE;
+    }
+}
 
 void DMA1_Channel5_4_IRQHandler(void)
 {
 #ifdef USE_TIMER_15_CHANNEL_1
-    if (dshot) {
+    /*
+     * DMA1_CHANNEL5 is input/DShot and DMA1_CHANNEL4 is PA14 telemetry.
+     * They share this IRQ vector, so always service the timing-sensitive
+     * input/DShot channel first and only then clean up telemetry DMA.
+     */
+    uint8_t input_dma5_done = dma_flag_get(DMA1_FDT5_FLAG) == SET;
+    uint8_t input_dma5_error = dma_flag_get(DMA1_DTERR5_FLAG) == SET;
+
+    if (dshot && (input_dma5_done || input_dma5_error)) {
         DMA1->clr = DMA1_GL5_FLAG;
         INPUT_DMA_CHANNEL->ctrl_bit.chen = FALSE;
         transfercomplete();
         EXINT->swtrg = EXINT_LINE_15;
-        return;
     }
     //    if (dma_flag_get(DMA1_HDT5_FLAG) == SET) {
     //        if (servoPwm) {
@@ -138,23 +149,37 @@ void DMA1_Channel5_4_IRQHandler(void)
     //        }
     //    }
 
-    if (dma_flag_get(DMA1_FDT5_FLAG) == SET) {
+    if (!dshot && input_dma5_done) {
         DMA1->clr = DMA1_GL5_FLAG;
         INPUT_DMA_CHANNEL->ctrl_bit.chen = FALSE;
         transfercomplete();
         EXINT->swtrg = EXINT_LINE_15;
     }
-    if (dma_flag_get(DMA1_DTERR5_FLAG) == SET) {
+    if (!dshot && input_dma5_error) {
         DMA1->clr = DMA1_GL5_FLAG;
     }
+
+#ifdef USE_PA14_TELEMETRY
+    if (dma_flag_get(DMA1_FDT4_FLAG) == SET) {
+        send_telemetry = 0;
+        DMA1->clr = DMA1_GL4_FLAG;
+        DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
+    }
+    if (dma_flag_get(DMA1_DTERR4_FLAG) == SET) {
+        DMA1->clr = DMA1_GL4_FLAG;
+        DMA1_CHANNEL4->ctrl_bit.chen = FALSE;
+    }
+#endif
 #endif
 #ifdef USE_TIMER_3_CHANNEL_1
-    if (dshot) {
+    uint8_t input_dma4_done = dma_flag_get(DMA1_FDT4_FLAG) == SET;
+    uint8_t input_dma4_error = dma_flag_get(DMA1_DTERR4_FLAG) == SET;
+
+    if (dshot && (input_dma4_done || input_dma4_error)) {
         DMA1->clr = DMA1_GL4_FLAG;
         INPUT_DMA_CHANNEL->ctrl_bit.chen = FALSE;
         transfercomplete();
         EXINT->swtrg = EXINT_LINE_15;
-        return;
     }
     if (dma_flag_get(DMA1_HDT4_FLAG) == SET) {
         if (servoPwm) {
@@ -162,13 +187,13 @@ void DMA1_Channel5_4_IRQHandler(void)
             DMA1->clr = DMA1_HDT4_FLAG;
         }
     }
-    if (dma_flag_get(DMA1_FDT4_FLAG) == SET) {
+    if (!dshot && input_dma4_done) {
         DMA1->clr = DMA1_GL4_FLAG;
         INPUT_DMA_CHANNEL->ctrl_bit.chen = FALSE;
         transfercomplete();
         EXINT->swtrg = EXINT_LINE_15;
     }
-    if (dma_flag_get(DMA1_DTERR4_FLAG) == SET) {
+    if (!dshot && input_dma4_error) {
         DMA1->clr = DMA1_GL4_FLAG;
     }
 #endif
